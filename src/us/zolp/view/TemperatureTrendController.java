@@ -44,6 +44,8 @@ public class TemperatureTrendController {
 		lowSeries.setName("Low Temps");
 		
 		dayList.clear();
+		highSeries.getData().clear();
+		lowSeries.getData().clear();
 		
 		for (WeatherDay w : mainApp.getWeatherData()) {
 			dayList.add(w.getDay());
@@ -51,13 +53,14 @@ public class TemperatureTrendController {
 		
 		xAxis.setCategories(dayList);
 		
+		if (tempChart.getData().size() == 2) {
+			tempChart.getData().remove(1);
+			tempChart.getData().remove(0);
+		}
+		
 		for (int x = 0; x < weatherDays.size(); x++) {
 			highSeries.getData().add(new Data<>(dayList.get(x), weatherDays.get(x).getHighTemp()));
 			lowSeries.getData().add(new Data<>(dayList.get(x), weatherDays.get(x).getLowTemp()));
-		}
-		
-		for (int x = 0; x < tempChart.getData().size(); x++) {
-			tempChart.getData().remove(x);
 		}
 		
 		tempChart.getData().add(highSeries);

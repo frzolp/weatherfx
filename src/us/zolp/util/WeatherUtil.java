@@ -10,9 +10,13 @@ import gov.weather.graphical.ParametersType.Precipitation;
 import gov.weather.graphical.ParametersType.Temperature;
 import gov.weather.graphical.ParametersType.Weather;
 import gov.weather.graphical.PercentageValType;
+import gov.weather.graphical.StartValidTimeType;
 import gov.weather.graphical.TempValType;
+import gov.weather.graphical.TimeLayoutElementType;
 
 import java.io.OutputStreamWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +31,7 @@ public class WeatherUtil {
 	
 	public static List<WeatherDay> dwmlToWeatherDays(Dwml dwml, int days) {
 		List<WeatherDay> weatherDays = new ArrayList<WeatherDay>();
+		List<LocalDateTime> startTimes = new ArrayList<LocalDateTime>();
 		DataType dataType = null;
 		ParametersType parameters = null;
 		List<TempValType> loTemps = null;
@@ -57,6 +62,16 @@ public class WeatherUtil {
 			System.out.println("dwmlToWeatherDays: dwml is null!");
 		
 		dataType = dwml.getData().get(0);
+		for (TimeLayoutElementType tl : dataType.getTimeLayout()) {
+			if (tl.getLayoutKey().equalsIgnoreCase("k-p24h-n" + days + "-1")) {
+				for (Object obj : tl.getStartValidTimeAndEndValidTime()) {
+					if (obj.getClass().equals(StartValidTimeType.class)) {
+						startTimes.add(((StartValidTimeType)obj).getValue().toGregorianCalendar().toZonedDateTime().toLocalDateTime());
+					}
+				}
+				break;
+			}
+		}
 		
 		x = 0;
 		while ((parameters = dataType.getParameters().get(x)) == null)
@@ -127,7 +142,8 @@ public class WeatherUtil {
 		for (x = 0; x < days; x++) {
 			System.out.println("Inside dwmlToWeatherDays, iteration " + x);
 			WeatherDay weatherDay = new WeatherDay();
-			weatherDay.setDay("Day " + x);
+//			weatherDay.setDay("Day " + (x + 1));
+			weatherDay.setDay(startTimes.get(x).format(DateTimeFormatter.ofPattern("MM/dd")));
 			if (precips.get(x) != null)
 				if (precips.get(x).getValue() != null)
 					weatherDay.setChancePrecipitation(precips.get(x).getValue().intValue());

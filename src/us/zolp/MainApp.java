@@ -37,6 +37,9 @@ import javafx.scene.layout.BorderPane;
 public class MainApp extends Application {
 	private Stage primaryStage;
 	private BorderPane rootLayout;
+	private RootLayoutController rootLayoutController;
+	private WeatherOverviewController weatherOverviewController;
+	private TemperatureTrendController temperatureTrendController;
 	
 	private ObservableList<WeatherDay> weatherData = FXCollections.observableArrayList();
 	
@@ -74,8 +77,8 @@ public class MainApp extends Application {
 	        primaryStage.setTitle("Bad Weather App");
 
 	        // Give the controller access to the main app.
-	        RootLayoutController controller = loader.getController();
-	        controller.setMainApp(this);
+	        rootLayoutController = loader.getController();
+	        rootLayoutController.setMainApp(this);
 
 	        primaryStage.show();
 	        
@@ -100,6 +103,14 @@ public class MainApp extends Application {
 		return weatherData;
 	}
 	
+	public WeatherOverviewController getWeatherOverviewController() {
+		return weatherOverviewController;
+	}
+	
+	public TemperatureTrendController getTemperatureTrendController() {
+		return temperatureTrendController;
+	}
+	
 	public void showWeatherOverview() {
 		try {
 			FXMLLoader loader = new FXMLLoader();
@@ -108,8 +119,8 @@ public class MainApp extends Application {
 			
 			rootLayout.setCenter(weatherOverview);
 			
-			WeatherOverviewController controller = loader.getController();
-			controller.setMainApp(this);
+			weatherOverviewController = loader.getController();
+			weatherOverviewController.setMainApp(this);
 		} catch (IOException ex) {
 			
 		}
@@ -123,9 +134,9 @@ public class MainApp extends Application {
 			
 			rootLayout.setBottom(temperatureTrend);
 			
-			TemperatureTrendController controller = loader.getController();
-			controller.setMainApp(this);
-			controller.setTemperatureData(weatherData);
+			temperatureTrendController = loader.getController();
+			temperatureTrendController.setMainApp(this);
+			temperatureTrendController.setTemperatureData(weatherData);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

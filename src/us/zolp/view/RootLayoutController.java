@@ -168,6 +168,6 @@ public class RootLayoutController {
     	int days = daysChoice.getValue();
     	
     	mainApp.getWeatherDataFromXml(zip, start, days, units, format);
-    	
+    	mainApp.getTemperatureTrendController().setTemperatureData(mainApp.getWeatherData());
     }
 }
