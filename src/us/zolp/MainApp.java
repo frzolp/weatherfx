@@ -79,12 +79,6 @@ public class MainApp extends Application {
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }
-
-	    // Try to load last opened person file.
-//	    File file = getPersonFilePath();
-//	    if (file != null) {
-//	        loadPersonDataFromFile(file);
-//	    }
 	}
 	
 	public Stage getPrimaryStage() {
