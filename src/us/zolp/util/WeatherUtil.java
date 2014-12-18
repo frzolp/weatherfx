@@ -18,6 +18,7 @@ import java.io.OutputStreamWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -44,15 +45,15 @@ public class WeatherUtil {
 		/*
 		 * REMOVE THE FOLLOWING CODE AFTER DEBUGGING
 		 */
-		try {
-			JAXBContext ctx = JAXBContext.newInstance(Dwml.class);
-			Marshaller mar = ctx.createMarshaller();
-			mar.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-			mar.marshal(dwml, new OutputStreamWriter(System.out));
-		} catch (JAXBException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			JAXBContext ctx = JAXBContext.newInstance(Dwml.class);
+//			Marshaller mar = ctx.createMarshaller();
+//			mar.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+//			mar.marshal(dwml, new OutputStreamWriter(System.out));
+//		} catch (JAXBException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		/*
 		 * REMOVE THE PRECEDING CODE AFTER DEBUGGING
 		 */
@@ -119,64 +120,89 @@ public class WeatherUtil {
 			System.out.println("Inside dwmlToWeatherDays, after conditions, " + conditions.size());
 		
 		if (loTemps != null)
-			if (loTemps.get(0) == null)
-				loTemps.remove(0);
+			loTemps.removeAll(Collections.singleton(null));
 		if (hiTemps != null)
-			if (hiTemps.get(0) == null)
-				hiTemps.remove(0);
-			if (conditionIcons != null)
-				if (conditionIcons.get(0) == null)
-					conditionIcons.remove(0);
+			hiTemps.removeAll(Collections.singleton(null));
+		if (conditionIcons != null)
+			conditionIcons.removeAll(Collections.singleton(null));
+		
 		if (conditions != null) {
-			if (conditions.get(0) == null)
-				conditions.remove(0);
+			conditions.removeAll(Collections.singleton(null));
 			if (conditions.get(0).getClass().equals(String.class))
 				conditions.remove(0);
 		}
+		
 		if (precips != null)
-			if (precips.get(0) == null)
-				precips.remove(0);
+			precips.removeAll(Collections.singleton(null));
 		
 		System.out.println("Inside dwmlToWeatherDays, after purging");
+		
+		for (PercentageValType p : precips) {
+			if (p.getValue() != null)
+				System.out.println(p.getValue());
+		}
 		
 		for (x = 0; x < days; x++) {
 			System.out.println("Inside dwmlToWeatherDays, iteration " + x);
 			WeatherDay weatherDay = new WeatherDay();
 //			weatherDay.setDay("Day " + (x + 1));
 			weatherDay.setDay(startTimes.get(x).format(DateTimeFormatter.ofPattern("MM/dd")));
-			if (precips.get(x) != null)
-				if (precips.get(x).getValue() != null)
-					weatherDay.setChancePrecipitation(precips.get(x).getValue().intValue());
-				else
-					weatherDay.setChancePrecipitation(-2);
-			else
-				weatherDay.setChancePrecipitation(-1);
 			
-			if (loTemps.get(x) != null)
-				if (loTemps.get(x).getValue() != null)
-					weatherDay.setLowTemp(loTemps.get(x).getValue().intValue());
-				else
-					weatherDay.setLowTemp(-2);
-			else
-				weatherDay.setLowTemp(-1);
-			
-			if (hiTemps.get(x) != null)
-				if (hiTemps.get(x).getValue() != null)
-					weatherDay.setHighTemp(hiTemps.get(x).getValue().intValue());
-				else
-					weatherDay.setHighTemp(-2);
-			else
-				weatherDay.setHighTemp(-1);
-			
-			if (conditionIcons.get(x) != null)
-				weatherDay.setConditionIcon(conditionIcons.get(x));
-			
-			if (conditions.get(x) != null) {
-				if (conditions.get(x).getClass().equals(String.class)) {
-					weatherDay.setConditions(((String)conditions.get(x)));
+			if (x < precips.size()) {
+				if (x > 0) {
+					if ((x * 2) < precips.size()) {
+						if (precips.get(x * 2) != null)
+							if (precips.get(x * 2).getValue() != null)
+								weatherDay.setChancePrecipitation(precips.get(x * 2).getValue().intValue());
+							else
+								weatherDay.setChancePrecipitation(-2);
+						else
+							weatherDay.setChancePrecipitation(-1);
+					}
+				} else {
+					if (precips.get(x) != null)
+						if (precips.get(x).getValue() != null)
+							weatherDay.setChancePrecipitation(precips.get(x).getValue().intValue());
+						else
+							weatherDay.setChancePrecipitation(-2);
+					else
+						weatherDay.setChancePrecipitation(-1);
 				}
-				else if (conditions.get(x).getClass().equals(WeatherConditions.class)) {
-					weatherDay.setConditions(((WeatherConditions)conditions.get(x)).getWeatherSummary());
+			}
+			
+			if (x < loTemps.size()) {
+				if (loTemps.get(x) != null)
+					if (loTemps.get(x).getValue() != null)
+						weatherDay.setLowTemp(loTemps.get(x).getValue().intValue());
+					else
+						weatherDay.setLowTemp(-2);
+				else
+					weatherDay.setLowTemp(-1);
+			}
+			
+			if (x < hiTemps.size()) {
+				if (hiTemps.get(x) != null)
+					if (hiTemps.get(x).getValue() != null)
+						weatherDay.setHighTemp(hiTemps.get(x).getValue().intValue());
+					else
+						weatherDay.setHighTemp(-2);
+				else
+					weatherDay.setHighTemp(-1);
+			}
+			
+			if (x < conditionIcons.size()) {
+				if (conditionIcons.get(x) != null)
+					weatherDay.setConditionIcon(conditionIcons.get(x));
+			}
+			
+			if (x < conditions.size()) {
+				if (conditions.get(x) != null) {
+					if (conditions.get(x).getClass().equals(String.class)) {
+						weatherDay.setConditions(((String)conditions.get(x)));
+					}
+					else if (conditions.get(x).getClass().equals(WeatherConditions.class)) {
+						weatherDay.setConditions(((WeatherConditions)conditions.get(x)).getWeatherSummary());
+					}
 				}
 			}
 			weatherDays.add(weatherDay);
