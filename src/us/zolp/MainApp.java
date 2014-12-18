@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -45,15 +46,6 @@ public class MainApp extends Application {
 	
 	public MainApp() {
 		getWeatherDataFromXml("46410", LocalDate.now(), 7, "e", "24 hourly");
-		
-//		for (int x = 0; x < 8; x++) {
-//			WeatherDay wd = new WeatherDay();
-//			wd.setDay("Day " + (x + 1));
-//			wd.setConditions("Some Rain");
-//			wd.setHighTemp(13 * x);
-//			wd.setLowTemp(2 * x);
-//			weatherData.add(wd);
-//		}
 		
 		for (WeatherDay wd : weatherData) {
 			System.out.println(wd.getDay());
@@ -143,7 +135,15 @@ public class MainApp extends Application {
 	}
 	
 	public void getWeatherDataFromXml(String zip, LocalDate start, int days, String units, String format) {
-		HttpClient client = HttpClients.createDefault();
+		String proxyHost = System.getProperty("http.proxyHost");
+		String proxyPort = System.getProperty("http.proxyPort");
+		HttpClient client = null;
+		
+		if (proxyHost != null && !proxyHost.isEmpty() && proxyPort != null && !proxyPort.isEmpty())
+			client = HttpClients.custom().setProxy(new HttpHost(proxyHost, Integer.valueOf(proxyPort))).build();
+		else
+			client = HttpClients.createDefault();
+		
 		URI uri = null;
 		URIBuilder builder = new URIBuilder();
 		builder.setScheme("http");
@@ -185,6 +185,10 @@ public class MainApp extends Application {
 	}
 	
 	public static void main(String[] args) {
+		if (args.length == 2) {
+			System.setProperty("http.proxyHost", args[0]);
+			System.setProperty("http.proxyPort", args[1]);
+		}
 		launch(args);
 	}
 }
