@@ -21,43 +21,15 @@ import javafx.scene.image.ImageView;
 
 public class RootLayoutController {
 	private MainApp mainApp;
-	
-	enum Units {
-		ENGLISH("e"),
-		METRIC("m");
-		
-		private final String value;
-		
-		private Units(final String value) {
-			this.value = value;
-		}
-		
-		@Override
-		public String toString() {
-			return value;
-		}
-	}
-	
-	enum Format {
-		TWELVE("12 hourly"),
-		TWENTYFOUR("24 hourly");
-		
-		private final String value;
-		
-		private Format(final String value) {
-			this.value = value;
-		}
-		
-		@Override
-		public String toString() {
-			return value;
-		}
-	}
-	
+
+	// List of items for the daysChoice ChoiceBox
 	private ObservableList<Integer> daysList = FXCollections.observableArrayList(1, 2, 3, 4, 5, 6, 7);
+	// List of items for the unitChoice ChoiceBox
 	private ObservableList<String> unitsList = FXCollections.observableArrayList("English", "Metric");
+	// List of items for the formatChoice ChoiceBox
 	private ObservableList<String> formatList = FXCollections.observableArrayList("12 Hours", "24 Hours");
 	
+	// Values to be used by selected items in the ChoiceBoxen
 	private final String[] units = {"e", "m"};
 	private final String[] formats = {"12 hourly", "24 hourly"};
 	
@@ -73,20 +45,6 @@ public class RootLayoutController {
 	private ChoiceBox<Integer> daysChoice;
 	@FXML
 	private DatePicker startPicker;
-	@FXML
-	private Label highLabel;
-	@FXML
-	private Label lowLabel;
-	@FXML
-	private Label precipLabel;
-	@FXML
-	private Label conditionsLabel;
-	@FXML
-	private Label urlLabel;
-	@FXML
-	private ListView<WeatherDay> weatherList;
-	@FXML
-	private ImageView conditionImage;
 	
 	
 	/**
@@ -96,7 +54,6 @@ public class RootLayoutController {
      */
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
-        weatherList.setItems(mainApp.getWeatherData());
     }
     
     /**
@@ -107,6 +64,9 @@ public class RootLayoutController {
         System.exit(0);
     }
     
+    /**
+     * Initializes the controls with default values
+     */
     @FXML
     private void initialize() {
     	startPicker.setValue(LocalDate.now());
@@ -116,58 +76,36 @@ public class RootLayoutController {
     	formatChoice.setValue(formatList.get(1));
     	daysChoice.setItems(daysList);
     	daysChoice.setValue(daysList.get(0));
-    	
-    	weatherList.setCellFactory(lc -> new ListCell<WeatherDay>() {
-    		@Override
-    		protected void updateItem(WeatherDay t, boolean b) {
-    			super.updateItem(t, b);
-    			if (t != null) {
-    				setText(t.getDay());
-    			} else {
-    				setText("");
-    			}
-    		}
-    	});
-    	
-    	weatherList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
-    			showWeatherDetails(newValue));
-    	weatherList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     }
     
-    private void showWeatherDetails(WeatherDay weatherDay) {
-		if (weatherDay != null) {
-			lowLabel.setText(Integer.toString(weatherDay.getLowTemp()));
-			highLabel.setText(Integer.toString(weatherDay.getHighTemp()));
-			precipLabel.setText(Integer.toString(weatherDay.getChancePrecipitation()));
-			conditionsLabel.setText(weatherDay.getConditions());
-			urlLabel.setText(weatherDay.getConditionIcon());
-			conditionImage.setImage(new Image(weatherDay.getConditionIcon()));
-			//mainApp.showTemperatureTrend();
-		} else {
-			lowLabel.setText("");
-			highLabel.setText("");
-			precipLabel.setText("");
-			conditionsLabel.setText("");
-		}
-	}
-    
+    /**
+     * Event handler for the Go Button
+     */
     @FXML
     private void handleGo() {
+    	// Get the ZIP code
     	String zip = zipField.getText();
+    	// If user selected "English", use "e"; if "Metric", use "m" 
     	String units = null;
     	if (unitChoice.getValue().equalsIgnoreCase("English"))
     		units = this.units[0];
     	else
     		units = this.units[1];
+    	
+    	// If user selected "12 hours", use "12 hourly"; if "24 hours", use "24 hourly"
     	String format = null;
     	if (formatChoice.getValue().equalsIgnoreCase("12 Hours"))
     		format = formats[0];
     	else
     		format = formats[1];
+    	// Get the date set in the DatePicker
     	LocalDate start = startPicker.getValue();
+    	// get the value of the daysChoice ChoiceBox
     	int days = daysChoice.getValue();
     	
+    	// Get the XML weather data
     	mainApp.getWeatherDataFromXml(zip, start, days, units, format);
+    	// Set the TemperatureTrend's data
     	mainApp.getTemperatureTrendController().setTemperatureData(mainApp.getWeatherData());
     }
 }

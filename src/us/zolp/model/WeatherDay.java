@@ -111,4 +111,9 @@ public class WeatherDay {
 	public IntegerProperty chancePrecipitationProperty() {
 		return chancePrecipitation;
 	}
+	
+	@Override
+	public String toString() {
+		return day.get();
+	}
 }

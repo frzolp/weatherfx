@@ -41,6 +41,7 @@ public class TemperatureTrendController {
 	
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
+		setTemperatureData(mainApp.getWeatherData());
 	}
 	
 	public Data<String, Integer> plot(String x, int y, int type) {

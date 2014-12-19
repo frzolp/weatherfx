@@ -58,9 +58,9 @@ public class WeatherUtil {
 		 * REMOVE THE PRECEDING CODE AFTER DEBUGGING
 		 */
 		
-		System.out.println("Inside dwmlToWeatherDays");
-		if (dwml == null)
-			System.out.println("dwmlToWeatherDays: dwml is null!");
+//		System.out.println("Inside dwmlToWeatherDays");
+//		if (dwml == null)
+//			System.out.println("dwmlToWeatherDays: dwml is null!");
 		
 		dataType = dwml.getData().get(0);
 		for (TimeLayoutElementType tl : dataType.getTimeLayout()) {
@@ -82,16 +82,16 @@ public class WeatherUtil {
 			if (t != null) {
 				if (t.getType().equalsIgnoreCase("maximum")) {
 					hiTemps = t.getValue();
-					System.out.println("dwmlToWeatherDays: got hiTemps, size: " + t.getValue().size());
+//					System.out.println("dwmlToWeatherDays: got hiTemps, size: " + t.getValue().size());
 				} else if (t.getType().equalsIgnoreCase("minimum")) {
 					loTemps = t.getValue();
-					System.out.println("dwmlToWeatherDays: got loTemps, size: " + t.getValue().size());
+//					System.out.println("dwmlToWeatherDays: got loTemps, size: " + t.getValue().size());
 				}
 			}
 		}
 		
-		if (hiTemps != null)
-			System.out.println("Inside dwmlToWeatherDays, after temperature, " + hiTemps.size());
+//		if (hiTemps != null)
+//			System.out.println("Inside dwmlToWeatherDays, after temperature, " + hiTemps.size());
 		
 		for (x = 0; x < parameters.getProbabilityOfPrecipitation().size(); x++) {
 			if (parameters.getProbabilityOfPrecipitation().get(x) != null) {
@@ -100,24 +100,24 @@ public class WeatherUtil {
 			}
 		}
 		
-		if (precips != null)
-			System.out.println("Inside dwmlToWeatherDays, after precipitation, " + precips.size());
+//		if (precips != null)
+//			System.out.println("Inside dwmlToWeatherDays, after precipitation, " + precips.size());
 		
 		for (x = 0; x < parameters.getConditionsIcon().size(); x++) {
 			if (parameters.getConditionsIcon().get(x) != null)
 				conditionIcons = parameters.getConditionsIcon().get(x).getIconLink();
 		}
 		
-		if (conditionIcons != null)
-			System.out.println("Inside dwmlToWeatherDays, after condition icons, " + conditionIcons.size());
+//		if (conditionIcons != null)
+//			System.out.println("Inside dwmlToWeatherDays, after condition icons, " + conditionIcons.size());
 		
 		for (x = 0; x < parameters.getWeather().size(); x++) {
 			if (parameters.getWeather().get(x) != null)
 				conditions = parameters.getWeather().get(x).getNameAndWeatherConditions();
 		}
 		
-		if (conditions != null)
-			System.out.println("Inside dwmlToWeatherDays, after conditions, " + conditions.size());
+//		if (conditions != null)
+//			System.out.println("Inside dwmlToWeatherDays, after conditions, " + conditions.size());
 		
 		if (loTemps != null)
 			loTemps.removeAll(Collections.singleton(null));
@@ -135,7 +135,7 @@ public class WeatherUtil {
 		if (precips != null)
 			precips.removeAll(Collections.singleton(null));
 		
-		System.out.println("Inside dwmlToWeatherDays, after purging");
+//		System.out.println("Inside dwmlToWeatherDays, after purging");
 		
 		for (PercentageValType p : precips) {
 			if (p.getValue() != null)
@@ -143,7 +143,7 @@ public class WeatherUtil {
 		}
 		
 		for (x = 0; x < days; x++) {
-			System.out.println("Inside dwmlToWeatherDays, iteration " + x);
+//			System.out.println("Inside dwmlToWeatherDays, iteration " + x);
 			WeatherDay weatherDay = new WeatherDay();
 //			weatherDay.setDay("Day " + (x + 1));
 			weatherDay.setDay(startTimes.get(x).format(DateTimeFormatter.ofPattern("MM/dd")));
@@ -206,7 +206,7 @@ public class WeatherUtil {
 				}
 			}
 			weatherDays.add(weatherDay);
-			System.out.println(weatherDay.getDay() + " " + weatherDay.getHighTemp());
+//			System.out.println(weatherDay.getDay() + " " + weatherDay.getHighTemp());
 		}
 		return weatherDays;
 	}
