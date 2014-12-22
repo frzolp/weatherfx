@@ -46,8 +46,11 @@ public class MainApp extends Application {
 		// Test initialization data
 		getWeatherDataFromXml("46410", LocalDate.now(), 7, "e", "24 hourly");
 		
+		// Debug output of each weather day
 		for (WeatherDay wd : weatherData) {
-			System.out.println(wd.getDay());
+			System.out.println("Day: " + wd.getDay() + ", High: " + wd.getHighTemp() +
+					", Low: " + wd.getLowTemp() + ", Cond: " + wd.getConditions() +
+					", Chance: " + wd.getChancePrecipitation());
 		}
 	}
 	
@@ -63,22 +66,42 @@ public class MainApp extends Application {
 		showTemperatureTrend();
 	}
 	
+	/**
+	 * Gets the current primary Stage
+	 * @return Stage used by the application
+	 */
 	public Stage getPrimaryStage() {
 		return primaryStage;
 	}
 	
+	/**
+	 * Gets the ObservableList of formatted WeatherDay data
+	 * @return List of weather data
+	 */
 	public ObservableList<WeatherDay> getWeatherData() {
 		return weatherData;
 	}
 	
+	/**
+	 * Gets the Controller of the current WeatherOverview instance
+	 * @return instance of the WeatherOverviewController
+	 */
 	public WeatherOverviewController getWeatherOverviewController() {
 		return weatherOverviewController;
 	}
 	
+	/**
+	 * Gets the Controller of the current TemperatureTrend instance
+	 * @return instance of the TemperatureTrendController
+	 */
 	public TemperatureTrendController getTemperatureTrendController() {
 		return temperatureTrendController;
 	}
 	
+	/**
+	 * Loads the RootLayout view from an FXML file, adds it to a Scene, and displays it
+	 * on the primary Stage.
+	 */
 	public void showRootLayout() {
 		try {
 	        // Load root layout from fxml file.
@@ -101,6 +124,9 @@ public class MainApp extends Application {
 	    }
 	}
 	
+	/**
+	 * Loads the WeatherOverview view from an FXML file and adds it to the main view.
+	 */
 	public void showWeatherOverview() {
 		try {
 			// Get WeatherOverview from FXML file
@@ -119,6 +145,9 @@ public class MainApp extends Application {
 		}
 	}
 	
+	/**
+	 * Loads the TemperatureTrend view from an FXML file and adds it to the main view.
+	 */
 	public void showTemperatureTrend() {
 		try {
 			// Get TemperatureTrend from FXML file

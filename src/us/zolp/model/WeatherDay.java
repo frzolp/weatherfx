@@ -76,36 +76,36 @@ public class WeatherDay {
 		return conditionIcon;
 	}
 	
-	public int getHighTemp() {
-		return hiTemp.get();
+	public Integer getHighTemp() {
+		return hiTemp.getValue();
 	}
 	
-	public void setHighTemp(int hiTemp) {
-		this.hiTemp.set(hiTemp);
+	public void setHighTemp(Integer hiTemp) {
+		this.hiTemp.setValue(hiTemp);
 	}
 	
 	public IntegerProperty highTempProperty() {
 		return hiTemp;
 	}
 	
-	public int getLowTemp() {
-		return loTemp.get();
+	public Integer getLowTemp() {
+		return loTemp.getValue();
 	}
 	
-	public void setLowTemp(int loTemp) {
-		this.loTemp.set(loTemp);
+	public void setLowTemp(Integer loTemp) {
+		this.loTemp.setValue(loTemp);
 	}
 	
 	public IntegerProperty lowTempProperty() {
 		return loTemp;
 	}
 	
-	public int getChancePrecipitation() {
-		return chancePrecipitation.get();
+	public Integer getChancePrecipitation() {
+		return chancePrecipitation.getValue();
 	}
 	
-	public void setChancePrecipitation(int chancePrecipitation) {
-		this.chancePrecipitation.set(chancePrecipitation);
+	public void setChancePrecipitation(Integer chancePrecipitation) {
+		this.chancePrecipitation.setValue(chancePrecipitation);
 	}
 	
 	public IntegerProperty chancePrecipitationProperty() {

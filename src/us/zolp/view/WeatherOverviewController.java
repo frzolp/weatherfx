@@ -69,9 +69,9 @@ public class WeatherOverviewController {
 	public void showWeatherDetails(WeatherDay weatherDay) {
 		// Better safe than sorry: check if the parameter is null
 		if (weatherDay != null) {
-			lowTempLabel.setText(Integer.toString(weatherDay.getLowTemp()));
-			highTempLabel.setText(Integer.toString(weatherDay.getHighTemp()));
-			chancePrecipitationLabel.setText(Integer.toString(weatherDay.getChancePrecipitation()));
+			lowTempLabel.setText(weatherDay.getLowTemp().toString() + "°");
+			highTempLabel.setText(weatherDay.getHighTemp().toString() + "°");
+			chancePrecipitationLabel.setText(weatherDay.getChancePrecipitation().toString() + "%");
 			conditionsLabel.setText(weatherDay.getConditions());
 			conditionImage.setImage(new Image(weatherDay.getConditionIcon()));
 		} else {

@@ -72,8 +72,10 @@ public class TemperatureTrendController {
 		}
 		
 		for (int x = 0; x < weatherDays.size(); x++) {
-			highSeries.getData().add(plot(dayList.get(x), weatherDays.get(x).getHighTemp(), 0));
-			lowSeries.getData().add(plot(dayList.get(x), weatherDays.get(x).getLowTemp(), 1));
+			if (weatherDays.get(x).getHighTemp() != null)
+				highSeries.getData().add(plot(dayList.get(x), weatherDays.get(x).getHighTemp(), 0));
+			if (weatherDays.get(x).getLowTemp() != null)
+				lowSeries.getData().add(plot(dayList.get(x), weatherDays.get(x).getLowTemp(), 1));
 		}
 		
 		tempChart.getData().add(highSeries);
